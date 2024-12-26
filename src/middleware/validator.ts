@@ -13,12 +13,12 @@ export const registValidation = [
     minUppercase: 0,
   }),
   (req: Request, res: Response, next: NextFunction): any => {
-    const erroValidation = validationResult(req);
-    if (!erroValidation.isEmpty()) {
+    const errorValidation = validationResult(req);
+    if (!errorValidation.isEmpty()) {
       return ResponseHandler.error(
         res,
         "Your data is invalid",
-        erroValidation,
+        errorValidation,
         400
       );
     }

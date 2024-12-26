@@ -5,6 +5,9 @@ import { hashPassword } from "../utils/hashPassword";
 import { compare, compareSync } from "bcrypt";
 import ResponseHandler from "../utils/response";
 import { transporter } from "../config/nodemailer";
+import { sendEmail } from "../utils/emailSender";
+import { link } from "fs";
+import { promises } from "dns";
 
 export class UserController {
   async register(
@@ -17,12 +20,25 @@ export class UserController {
         data: { ...req.body, password: await hashPassword(req.body.password) },
       });
 
-      await transporter.sendMail({
-        from: "Admin",
-        to: req.body.email,
-        subject: "Registration Info",
-        html: `<h1>Welcome ${req.body.username}!!</h1>`,
+      const token = sign(
+        { id: register.id, email: register.email },
+        process.env.TOKEN_KEY || "test",
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      await sendEmail(req.body.email, "Registration Info", "register.hbs", {
+        username: req.body.username,
+        link: `${process.env.FE_URL}/verify?a_t=${token}`,
       });
+
+      // await transporter.sendMail({
+      //   from: "Admin",
+      //   to: req.body.email,
+      //   subject: "Registration Info",
+      //   html: `<h1>Welcome ${req.body.username}!!</h1>`,
+      // });
 
       ResponseHandler.success(res, "Registration is success", 201);
     } catch (error: any) {
@@ -132,6 +148,26 @@ export class UserController {
         success: false,
         error,
       });
+    }
+  }
+
+  async updatePhotoProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    console.log("File upload info : ", req.file);
+    try {
+      await prisma.users.update({
+        where: { id: parseInt(res.locals.decript.id) },
+        data: {
+          imgProfile: `/profile/${req.file?.filename}`,
+        },
+      });
+
+      ResponseHandler.success(res, "Upload profile is success!!");
+    } catch (error) {
+      next(error);
     }
   }
 }

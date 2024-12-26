@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
 import { registValidation } from "../middleware/validator";
+import { verifyToken } from "../middleware/verifyToken";
+import { uploader } from "../middleware/uploader";
 
 export class UserRouter {
   private route: Router;
@@ -21,6 +23,12 @@ export class UserRouter {
     this.route.post("/login", this.userController.login);
     this.route.patch("/update/:id", this.userController.update);
     this.route.post("/keep-login", this.userController.keepLogin);
+    this.route.patch(
+      "/photo-profile",
+      verifyToken,
+      uploader("/profile", "PRF").single("imgProfile"),
+      this.userController.updatePhotoProfile
+    );
   }
 
   public getRouter(): Router {
