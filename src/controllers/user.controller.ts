@@ -40,7 +40,11 @@ export class UserController {
       //   html: `<h1>Welcome ${req.body.username}!!</h1>`,
       // });
 
-      ResponseHandler.success(res, "Registration is success", 201);
+      ResponseHandler.success(
+        res,
+        "Registration is success, check your email",
+        201
+      );
     } catch (error: any) {
       console.log(error);
 
@@ -166,6 +170,25 @@ export class UserController {
       });
 
       ResponseHandler.success(res, "Upload profile is success!!");
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async verifiedAccount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      await prisma.users.update({
+        where: {
+          id: parseInt(res.locals.decript.id),
+        },
+        data: { isVerified: true },
+      });
+
+      ResponseHandler.success(res, "Your account is verified");
     } catch (error) {
       next(error);
     }

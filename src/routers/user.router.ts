@@ -22,12 +22,17 @@ export class UserRouter {
     );
     this.route.post("/login", this.userController.login);
     this.route.patch("/update/:id", this.userController.update);
-    this.route.post("/keep-login", this.userController.keepLogin);
+    this.route.get("/keep-login", verifyToken, this.userController.keepLogin);
     this.route.patch(
       "/photo-profile",
       verifyToken,
       uploader("/profile", "PRF").single("imgProfile"),
       this.userController.updatePhotoProfile
+    );
+    this.route.patch(
+      "/verify-account",
+      verifyToken,
+      this.userController.verifiedAccount
     );
   }
 

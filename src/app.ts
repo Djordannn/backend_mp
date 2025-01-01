@@ -4,6 +4,7 @@ import express, { Request, Response, Application, NextFunction } from "express";
 import cors from "cors";
 import ResponseHandler from "./utils/response";
 import { UserRouter } from "./routers/user.router";
+import path from "path";
 const PORT = process.env.PORT || 8085;
 
 class App {
@@ -18,6 +19,7 @@ class App {
   private configure(): void {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use("/", express.static(path.join(__dirname, "../public")));
   }
 
   private routes(): void {
