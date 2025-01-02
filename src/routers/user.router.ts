@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
+import { TicketController } from "../controllers/ticket.controller";
 import { registValidation } from "../middleware/validator";
 import { verifyToken } from "../middleware/verifyToken";
 import { uploader } from "../middleware/uploader";
@@ -7,9 +8,11 @@ import { uploader } from "../middleware/uploader";
 export class UserRouter {
   private route: Router;
   private userController: UserController;
+  private ticketController: TicketController;
 
   constructor() {
     this.userController = new UserController();
+    this.ticketController = new TicketController();
     this.route = Router();
     this.initializeRoutes();
   }
@@ -33,6 +36,11 @@ export class UserRouter {
       "/verify-account",
       verifyToken,
       this.userController.verifiedAccount
+    );
+    this.route.post(
+      "/add-ticket",
+      verifyToken,
+      this.ticketController.addTicket
     );
   }
 

@@ -29,6 +29,7 @@ class App {
     });
 
     this.app.use("/user", userRouter.getRouter());
+    this.app.use("/ticket", userRouter.getRouter());
   }
 
   private errorHandler(): void {
