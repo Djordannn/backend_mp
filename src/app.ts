@@ -4,6 +4,7 @@ import express, { Request, Response, Application, NextFunction } from "express";
 import cors from "cors";
 import ResponseHandler from "./utils/response";
 import { UserRouter } from "./routers/user.router";
+import { TicketRouter } from "./routers/ticket.router";
 import path from "path";
 const PORT = process.env.PORT || 8085;
 
@@ -24,12 +25,13 @@ class App {
 
   private routes(): void {
     const userRouter = new UserRouter();
+    const ticketRouter = new TicketRouter();
     this.app.get("/", (req: Request, res: Response): any => {
       return res.status(200).send("ORM API");
     });
 
     this.app.use("/user", userRouter.getRouter());
-    this.app.use("/ticket", userRouter.getRouter());
+    this.app.use("/ticket", ticketRouter.getRouter());
   }
 
   private errorHandler(): void {

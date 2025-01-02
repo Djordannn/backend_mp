@@ -37,11 +37,6 @@ export class UserRouter {
       verifyToken,
       this.userController.verifiedAccount
     );
-    this.route.post(
-      "/add-ticket",
-      verifyToken,
-      this.ticketController.addTicket
-    );
   }
 
   public getRouter(): Router {
