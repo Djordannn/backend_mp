@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../config/prisma";
 import ResponseHandler from "../utils/response";
 import { connect } from "http2";
+import { Result } from "express-validator";
 
 export class TicketController {
   async addTicket(
@@ -54,6 +55,44 @@ export class TicketController {
       });
     } catch (error) {
       next(error);
+    }
+  }
+
+  async getAllTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.findMany();
+
+      return res.status(200).send({
+        message: "Get all data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Get data failed", error, 500);
+    }
+  }
+
+  async getSport(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.findMany({
+        where: { category: "Sport" },
+      });
+
+      return res.status(200).send({
+        message: "Get sport data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Data sport not found", 404);
     }
   }
 }

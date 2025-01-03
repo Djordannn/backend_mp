@@ -26,6 +26,8 @@ export class TicketRouter {
       uploader("/ticketImg", "TIM").single("img"),
       this.ticketController.UpdateTicket
     );
+    this.route.get("/all-ticket", this.ticketController.getAllTicket);
+    this.route.get("/sport", this.ticketController.getSport);
   }
   public getRouter(): Router {
     return this.route;

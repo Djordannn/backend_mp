@@ -6,6 +6,8 @@ import ResponseHandler from "./utils/response";
 import { UserRouter } from "./routers/user.router";
 import { TicketRouter } from "./routers/ticket.router";
 import path from "path";
+import { prisma } from "./config/prisma";
+import { Result } from "express-validator";
 const PORT = process.env.PORT || 8085;
 
 class App {
