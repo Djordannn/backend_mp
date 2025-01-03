@@ -95,4 +95,44 @@ export class TicketController {
       ResponseHandler.error(res, "Data sport not found", 404);
     }
   }
+
+  async getMusic(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.findMany({
+        where: { category: "Music_Concert" },
+      });
+
+      return res.status(200).send({
+        message: "Get music data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Data music not found", 404);
+    }
+  }
+
+  async getWorkshop(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.findMany({
+        where: { category: "Workshop" },
+      });
+
+      return res.status(200).send({
+        message: "Get workshop data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Data workshop not found", 404);
+    }
+  }
 }
