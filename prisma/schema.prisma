@@ -16,7 +16,7 @@ datasource db {
 
 enum TicketsCategory {
   Sport
-  Music_Concert
+  Music
   Workshop
 }
 

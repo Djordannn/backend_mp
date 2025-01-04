@@ -15,7 +15,7 @@ export class TicketController {
         data: {
           ...req.body,
           user: { connect: { id: parseInt(res.locals.decript.id) } },
-          img: `/ticketProfile/${req.file?.filename}`,
+          img: `/ticketImg/${req.file?.filename}`,
         },
       });
       ResponseHandler.success(res, "Your ticket is success to add", 201);
@@ -103,7 +103,7 @@ export class TicketController {
   ): Promise<any> {
     try {
       const data = await prisma.tickets.findMany({
-        where: { category: "Music_Concert" },
+        where: { category: "Music" },
       });
 
       return res.status(200).send({
