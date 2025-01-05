@@ -11,9 +11,11 @@ export class TicketController {
     next: NextFunction
   ): Promise<any> {
     try {
+      const price = parseInt(req.body.price, 10);
       await prisma.tickets.create({
         data: {
           ...req.body,
+          price: price,
           user: { connect: { id: parseInt(res.locals.decript.id) } },
           img: `/ticketImg/${req.file?.filename}`,
         },
@@ -65,6 +67,29 @@ export class TicketController {
   ): Promise<any> {
     try {
       const data = await prisma.tickets.findMany();
+
+      return res.status(200).send({
+        message: "Get all data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Get data failed", error, 500);
+    }
+  }
+  async getSearchTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    const searchQuery = req.params.title as string;
+
+    try {
+      const data = await prisma.tickets.findMany({
+        where: {
+          title: { contains: searchQuery, mode: "insensitive" },
+        },
+      });
 
       return res.status(200).send({
         message: "Get all data success",

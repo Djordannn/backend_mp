@@ -27,6 +27,10 @@ export class TicketRouter {
       this.ticketController.UpdateTicket
     );
     this.route.get("/all-ticket", this.ticketController.getAllTicket);
+    this.route.get(
+      "/search-ticket/:title",
+      this.ticketController.getSearchTicket
+    );
     this.route.get("/sport", this.ticketController.getSport);
     this.route.get("/music", this.ticketController.getMusic);
     this.route.get("/workshop", this.ticketController.getWorkshop);
