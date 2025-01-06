@@ -28,12 +28,9 @@ export class TicketRouter {
     );
     this.route.get("/all-ticket", this.ticketController.getAllTicket);
     this.route.get(
-      "/search-ticket/:title",
-      this.ticketController.getSearchTicket
+      "/category-ticket/:category",
+      this.ticketController.getCategoryticket
     );
-    this.route.get("/sport", this.ticketController.getSport);
-    this.route.get("/music", this.ticketController.getMusic);
-    this.route.get("/workshop", this.ticketController.getWorkshop);
   }
   public getRouter(): Router {
     return this.route;

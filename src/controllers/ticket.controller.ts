@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../config/prisma";
+import { Prisma } from "@prisma/client";
 import ResponseHandler from "../utils/response";
 import { connect } from "http2";
 import { Result } from "express-validator";
@@ -66,7 +67,7 @@ export class TicketController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const data = await prisma.tickets.findMany();
+      const data = await prisma.tickets.findMany({});
 
       return res.status(200).send({
         message: "Get all data success",
@@ -77,17 +78,15 @@ export class TicketController {
       ResponseHandler.error(res, "Get data failed", error, 500);
     }
   }
-  async getSearchTicket(
+  async getCategoryticket(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
-    const searchQuery = req.params.title as string;
-
     try {
       const data = await prisma.tickets.findMany({
         where: {
-          title: { contains: searchQuery, mode: "insensitive" },
+          category: req.params.category,
         },
       });
 
@@ -98,66 +97,6 @@ export class TicketController {
       });
     } catch (error) {
       ResponseHandler.error(res, "Get data failed", error, 500);
-    }
-  }
-
-  async getSport(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const data = await prisma.tickets.findMany({
-        where: { category: "Sport" },
-      });
-
-      return res.status(200).send({
-        message: "Get sport data success",
-        success: true,
-        result: data,
-      });
-    } catch (error) {
-      ResponseHandler.error(res, "Data sport not found", 404);
-    }
-  }
-
-  async getMusic(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const data = await prisma.tickets.findMany({
-        where: { category: "Music" },
-      });
-
-      return res.status(200).send({
-        message: "Get music data success",
-        success: true,
-        result: data,
-      });
-    } catch (error) {
-      ResponseHandler.error(res, "Data music not found", 404);
-    }
-  }
-
-  async getWorkshop(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const data = await prisma.tickets.findMany({
-        where: { category: "Workshop" },
-      });
-
-      return res.status(200).send({
-        message: "Get workshop data success",
-        success: true,
-        result: data,
-      });
-    } catch (error) {
-      ResponseHandler.error(res, "Data workshop not found", 404);
     }
   }
 }

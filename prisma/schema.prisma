@@ -14,11 +14,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum TicketsCategory {
-  Sport
-  Music
-  Workshop
-}
+// enum TicketsCategory {
+//   Sport
+//   Music
+//   Workshop
+// }
 
 model Branch {
   id Int @id @default(autoincrement())
@@ -49,10 +49,11 @@ model Tickets {
   title String
   img String?
   price Int
-  category TicketsCategory
+  category String
   created_at DateTime @default(now())
 
   user Users @relation(fields: [userId], references: [id])
+
 
   @@map("tickets")
 }
