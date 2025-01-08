@@ -32,6 +32,7 @@ export class UserRouter {
       uploader("/profile", "PRF").single("imgProfile"),
       this.userController.updatePhotoProfile
     );
+    this.route.get("/profile", verifyToken, this.userController.getProfile);
     this.route.patch(
       "/verify-account",
       verifyToken,

@@ -39,7 +39,7 @@ export class TicketController {
       const existingTicket = await prisma.tickets.findFirst({
         where: {
           userId: parseInt(res.locals.decript.id),
-          title: req.params.title,
+          id: parseInt(req.params.id),
         },
       });
 
@@ -53,6 +53,7 @@ export class TicketController {
         },
         data: {
           ...req.body,
+          price: parseInt(req.body.price),
           img: `/ticketImg/${req.file?.filename}`,
         },
       });
@@ -78,6 +79,25 @@ export class TicketController {
       ResponseHandler.error(res, "Get data failed", error, 500);
     }
   }
+  async getUserTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.findMany({
+        where: { userId: res.locals.decript.id },
+      });
+
+      return res.status(200).send({
+        message: "Get ticket user success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Get ticket user failed", error, 500);
+    }
+  }
   async getCategoryticket(
     req: Request,
     res: Response,
@@ -91,12 +111,72 @@ export class TicketController {
       });
 
       return res.status(200).send({
-        message: "Get all data success",
+        message: "Get data from category success",
         success: true,
         result: data,
       });
     } catch (error) {
       ResponseHandler.error(res, "Get data failed", error, 500);
+    }
+  }
+
+  async getDetailTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      if (!req.params.title) {
+        return res.status(400).send({
+          message: "Title is required",
+          success: false,
+        });
+      }
+
+      const data = await prisma.tickets.findFirst({
+        where: {
+          title: req.params.title,
+        },
+      });
+
+      if (!data) {
+        return res.status(404).send({
+          message: "Ticket not found",
+          success: false,
+        });
+      }
+
+      return res.status(200).send({
+        message: "Get detail data success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      return res.status(500).send({
+        message: "Get data failed",
+        success: false,
+        Result: error,
+      });
+    }
+  }
+
+  async deleteTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await prisma.tickets.delete({
+        where: { id: parseInt(req.params.id), userId: res.locals.decript.id },
+      });
+
+      return res.status(200).send({
+        message: "Delete ticket success",
+        success: true,
+        result: data,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Delete ticket user failed", error, 500);
     }
   }
 }

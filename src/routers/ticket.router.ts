@@ -21,15 +21,34 @@ export class TicketRouter {
       this.ticketController.addTicket
     );
     this.route.patch(
-      "/img-Ticket/:title",
+      "/update/:id",
       verifyToken,
       uploader("/ticketImg", "TIM").single("img"),
       this.ticketController.UpdateTicket
     );
     this.route.get("/all-ticket", this.ticketController.getAllTicket);
     this.route.get(
+      "/user-ticket",
+      verifyToken,
+      this.ticketController.getUserTicket
+    );
+    this.route.get(
       "/category-ticket/:category",
       this.ticketController.getCategoryticket
+    );
+    this.route.get(
+      "/detail-ticket/:title",
+      this.ticketController.getDetailTicket
+    );
+    // this.route.patch(
+    //   "/update/:id",
+    //   verifyToken,
+    //   this.ticketController.updateTicket
+    // );
+    this.route.delete(
+      "/delete-ticket/:id",
+      verifyToken,
+      this.ticketController.deleteTicket
     );
   }
   public getRouter(): Router {

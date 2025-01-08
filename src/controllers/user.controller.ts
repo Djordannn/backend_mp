@@ -8,6 +8,7 @@ import { transporter } from "../config/nodemailer";
 import { sendEmail } from "../utils/emailSender";
 import { link } from "fs";
 import { promises } from "dns";
+import { Result } from "express-validator";
 
 export class UserController {
   async register(
@@ -119,6 +120,27 @@ export class UserController {
         success: false,
         error,
       });
+    }
+  }
+
+  async getProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const getProfile = await prisma.users.findUnique({
+        where: { id: res.locals.decript.id },
+      });
+
+      // ResponseHandler.success(res, "Get profile is success", 200);
+      return res.status(202).send({
+        message: "Get profile is success",
+        success: true,
+        result: getProfile,
+      });
+    } catch (error) {
+      ResponseHandler.error(res, "Get profile is failed", 500);
     }
   }
 
